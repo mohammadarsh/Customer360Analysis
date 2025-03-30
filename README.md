@@ -27,7 +27,7 @@ The **Customer360 Data Pipeline** is an end-to-end ETL solution built on PySpark
 ## 📌 Architecture
 The pipeline follows the **Lakehouse architecture pattern**, which consists of three layers:
 
-![Architecture Diagram](assets/architecture_diagram.png)
+![Architecture Diagram](architecture.jpg)
 
 1. **Bronze Layer (Raw Data Storage):**
    - Ingest raw customer transaction and profile data into **Google Cloud Storage (GCS)**.
