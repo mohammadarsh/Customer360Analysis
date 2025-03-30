@@ -6,6 +6,7 @@ from pyspark.sql.functions import *
 from datetime import  datetime,timedelta
 
 
+
 #intialize argument
 
 parser = argparse.ArgumentParser()
@@ -40,15 +41,21 @@ window_spec = Window.partitionBy("transaction_date","transaction_id","customer_i
 
 df = df.withColumn("row_num",row_number().over(window_spec))
 
+duplicate_bad_df = df.filter("row_num != 1").drop("row_num")
 df = df.filter("row_num = 1").drop("row_num")
 
 # print(df.show())
 
 # transformation 2: Clean invalid or missing values.
 
-df = df.withColumn('category',regexp_replace(col("category"), "[^a-zA-z0-9 ]",""))
+regex_pattern = "^[a-zA-z0-9 ]+$"
 
-# df.show()
+specail_bad_df = df.filter(~col("category").rlike(regex_pattern))
+print(specail_bad_df.select("category").show())
+
+df = df.filter(col("category").rlike(regex_pattern))
+print(df.select("category").show())
+
 
 #Transformation 3 : is_large_transaction for transactions > $1000.
 
@@ -62,8 +69,13 @@ df = df.withColumn("is_large_transaction",
 
 df = df.withColumn("transaction_date",to_timestamp(col("transaction_date")))
 df = df.withColumn("transaction_year",year(col("transaction_date"))).withColumn("transaction_month",month(col("transaction_date"))).withColumn("transaction_days",dayofmonth(col("transaction_date")))
-print(df.select("transaction_year","transaction_month","transaction_days").distinct().show())
+# print(df.select("transaction_year","transaction_month","transaction_days").distinct().show())
+
+
 
 #write
 
 df.write.mode("overwrite").parquet(fr"G:\Azure Data Engineering\Lect 13 pyspark Project\Customer360Analsyis\silver_layer\{yesterday_date}\customer_trasaction")
+
+#bad Records
+duplicate_bad_df.union(specail_bad_df).coalesce(1).write.mode("overwrite").csv(fr"G:\Azure Data Engineering\Lect 13 pyspark Project\Customer360Analsyis\silver_layer\bad_records\{yesterday_date}\customer_trasaction",header=True)
