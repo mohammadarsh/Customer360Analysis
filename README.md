@@ -1,19 +1,5 @@
 # Customer360 Data Pipeline: From Raw to Insights
 
-## 📌 Table of Contents
-- [Project Overview](#project-overview)
-- [Architecture](#architecture)
-- [Input Datasets](#input-datasets)
-- [ETL Pipeline Stages](#etl-pipeline-stages)
-- [Orchestration with Cloud Composer](#orchestration-with-cloud-composer)
-- [Technology Stack](#technology-stack)
-- [Key Benefits](#key-benefits)
-- [Getting Started](#getting-started)
-- [Contributors](#contributors)
-- [License](#license)
-
----
-
 ## 📌 Project Overview
 The **Customer360 Data Pipeline** is an end-to-end ETL solution built on PySpark that processes customer-related data from raw ingestion to business-ready insights. The pipeline extracts data from multiple sources, applies necessary transformations in three distinct layers (**Bronze, Silver, and Gold**), and stores the transformed data into **Parquet** for analysis.
 
